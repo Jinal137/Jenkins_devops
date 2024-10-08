@@ -6,7 +6,7 @@ pipeline {
         CHECKSUM_FILE = 'checksum.md5'
         REMOTE_HOST = 'jenkins@192.168.29.92'
         PYTHON_FILE = 'flask_api.py'
-        TAR_FILE = ${PYTHON_FILE}.tar.gz
+        TAR_FILE = 'flask_api.py.tar.gz'
         REMOTE_PATH = '/home/jenkins'
     }
 
