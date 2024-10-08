@@ -66,8 +66,7 @@ pipeline {
                     sh """
                         ssh ${REMOTE_HOST} '
                         tar -xzf ${REMOTE_PATH}/${TAR_FILE} &&
-                        nohup python3 ${REMOTE_PATH}/${PYTHON_FILE} > ${REMOTE_PATH}/${PYTHON_FILE}.log 2>&1 &
-                        '
+                        python3 ${REMOTE_PATH}/${PYTHON_FILE}'
                     """
                 }
             }
