@@ -21,8 +21,10 @@ pipeline {
 
         stage('Tar the Code') {
             steps {
-               // sh "tar -czf ${TAR_FILE} ."
-                env.CHECKSUM = sh(script: "md5sum ${TAR_FILE} | awk '{ print \$1 }'",returnStdout: true).trim()
+            	script{
+		        sh "tar -czf ${TAR_FILE} ."
+		        env.CHECKSUM = sh(script: "md5sum ${TAR_FILE} | awk '{ print \$1 }'",returnStdout: true).trim()
+                }
             }
         }
 
