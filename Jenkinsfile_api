@@ -11,7 +11,7 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Clone') {
             steps {
             	git url: 'https://github.com/Jinal137/Jenkins_api.git', branch: 'master'
             }
@@ -19,7 +19,7 @@ pipeline {
 
         
 
-        stage('Tar the Code') {
+        stage('Checksum') {
             steps {
             	script{
 
@@ -28,14 +28,14 @@ pipeline {
             }
         }
 
-        stage('Copy to Remote') {
+        stage('Copy') {
             steps {
                 sh "scp ${TAR_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/"
                 
             }
         }
 
-        stage('Check Checksum on Remote') {
+        stage('Check Checksum') {
             steps {
                 script {
                 
