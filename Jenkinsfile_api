@@ -7,7 +7,7 @@ pipeline {
         REMOTE_HOST = 'jenkins@192.168.29.92'
         PYTHON_FILE = 'flask_api.py'
         TAR_FILE = '${PYTHON_FILE}.tar.gz'
-        REMOTE_PATH = '/home/jenkins/${TAR_FILE}'
+        REMOTE_PATH = '/home/jenkins'
     }
 
     stages {
@@ -22,7 +22,7 @@ pipeline {
         stage('Tar the Code') {
             steps {
             	script{
-		        sh "tar -czf ${TAR_FILE} ."
+
 		        env.CHECKSUM = sh(script: "md5sum ${TAR_FILE} | awk '{ print \$1 }'",returnStdout: true).trim()
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
                 script {
                 
                     def remoteChecksum = sh(
-    script: "ssh ${REMOTE_HOST} 'md5sum ${REMOTE_PATH}'",returnStdout: true).tokenize()[0]
+    script: "ssh ${REMOTE_HOST} 'md5sum ${REMOTE_PATH}/${TAR_FILE}'",returnStdout: true).tokenize()[0]
     
     		     def storedChecksum = sh(script: "ssh ${REMOTE_HOST} 'echo ${env.CHECKSUM}'", returnStdout: true).trim()
     		     
@@ -61,7 +61,7 @@ pipeline {
                    
                     sh """
                         ssh ${REMOTE_HOST} '
-                        tar -xzf ${TAR_FILE} &&
+                        tar -xzf ${REMOTE_PATH}/${TAR_FILE} &&
                         python3 ${PYTHON_FILE}
                         '
                     """
