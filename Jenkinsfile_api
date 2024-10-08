@@ -44,6 +44,10 @@ pipeline {
     
     		     def storedChecksum = sh(script: "ssh ${REMOTE_HOST} 'echo ${env.CHECKSUM}'", returnStdout: true).trim()
     		     
+    		     echo "Local checksum: ${env.CHECKSUM}"
+                    echo "Remote checksum: ${remoteChecksum}"
+                    echo "Stored checksum: ${storedChecksum}"
+    		     
     		     if (remoteChecksum != storedChecksum) {
                         error "Checksum verification failed: ${remoteChecksum} != ${storedChecksum}"
                     } else {
