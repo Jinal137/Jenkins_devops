@@ -1,27 +1,35 @@
 pipeline {
     agent { label 'node1' }
-
-    parameters {
+     parameters {
         file(name: 'SPLUNK_DEB', description: 'Upload the Splunk .deb installer')
     }
 
     environment {
         TARGET_INSTANCE = 'jenkins@192.168.29.92'
-        JENKINS_DEB_STORE = "/workspace/stored_debs"
     }
-
-    stages {
-     stage('Store') {
+    stages {   
+       stage('Store in Jenkins') {
             steps {
-                	echo "Stored"
+                archiveArtifacts artifacts: ${params.SPLUNK_DEB}, fingerprint: true
+            }
+        }
+        stage('Transfer and Install Splunk') {
+            steps {
+                script {
+                                  
+                    sh "scp splunk.deb ${TARGET_INSTANCE}:/tmp/splunk.deb"
+                   
+                    sh """
+                    ssh ${TARGET_INSTANCE} 'sudo dpkg -i /tmp/splunk.deb && sudo systemctl start splunk'
+                    """
                 }
             }
         }
-   
+    }
 
     post {
         success {
-            echo 'Splunk logs stored and installation completed successfully.'
+            echo 'Splunk installed and started successfully!'
         }
        
     }
