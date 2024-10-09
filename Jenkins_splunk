@@ -10,7 +10,7 @@ pipeline {
     stages {   
        stage('Store in Jenkins') {
             steps {
-                archiveArtifacts artifacts: ${params.SPLUNK_DEB}, fingerprint: true
+                archiveArtifacts artifacts: "${params.SPLUNK_DEB}", fingerprint: true
             }
         }
         stage('Transfer and Install Splunk') {
