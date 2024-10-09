@@ -62,12 +62,19 @@ pipeline {
         stage('Run') {
             steps {
                 script {
+                   def isRunning = sh(script: "ssh ${REMOTE_HOST} 'pgrep -f ${PYTHON_FILE}'", 			    returnStatus: true) == 0
+            
+		    if (isRunning) {
+		        echo "API is already running. Skipping start."
+		    } 
+		    else {
                    
                     sh """
                         ssh ${REMOTE_HOST} '
                         tar -xzf ${REMOTE_PATH}/${TAR_FILE} &&
                         nohup python3 ${REMOTE_PATH}/${PYTHON_FILE}'
                     """
+                    }
                 }
             }
         }
