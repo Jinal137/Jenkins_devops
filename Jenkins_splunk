@@ -1,0 +1,29 @@
+pipeline {
+    agent { label 'node1' }
+
+    parameters {
+        file(name: 'SPLUNK_DEB', description: 'Upload the Splunk .deb installer')
+    }
+
+    environment {
+        TARGET_INSTANCE = 'jenkins@192.168.29.92'
+        JENKINS_DEB_STORE = "/workspace/stored_debs"
+    }
+
+    stages {
+     stage('Store') {
+            steps {
+                	echo "Stored"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Splunk logs stored and installation completed successfully.'
+        }
+       
+    }
+}
+
