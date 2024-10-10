@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                                   
-                    sh "scp splunk.tar ${TARGET_INSTANCE}:/home"
+                    sh "sudo scp splunk.tar ${TARGET_INSTANCE}:/home"
                    
                     sh """
                     ssh ${TARGET_INSTANCE} 'sudo dpkg -i /home/splunk.tar && sudo systemctl start splunk'
