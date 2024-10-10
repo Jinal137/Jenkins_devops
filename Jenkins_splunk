@@ -2,7 +2,7 @@ pipeline {
     agent { label 'node1' }
    
     environment {
-        TARGET_INSTANCE = 'jenkins@172.20.10.9'
+        TARGET_INSTANCE = 'jenkins@192.168.29.92
     }
     stages {   
      
@@ -10,10 +10,10 @@ pipeline {
             steps {
                 script {
                                   
-                    sh "sudo scp splunk.tar ${TARGET_INSTANCE}:/home"
+                    sh "sudo scp splunk.tar ${TARGET_INSTANCE}:/home/jenkins"
                    
                     sh """
-                    ssh ${TARGET_INSTANCE} 'sudo dpkg -i /home/splunk.tar && sudo systemctl start splunk'
+                    sudo ssh ${TARGET_INSTANCE} 'sudo dpkg -i /home/jenkins/splunk.tar && sudo systemctl start splunk'
                     """
                 }
             }
