@@ -15,7 +15,7 @@ pipeline {
                 script {
                     echo "${SPLUNK_DEB}"
                                   
-                    sh "sudo scp ${SPLUNK_DEB} ${TARGET_INSTANCE}:/home/jenkins"
+                    sh "scp ${SPLUNK_DEB} ${TARGET_INSTANCE}:/home/jenkins"
                    
                     
                 }
