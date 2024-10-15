@@ -14,6 +14,8 @@ pipeline {
             steps {
                 script {
                     echo "${SPLUNK_DEB}"
+                    def splunkDebPath = params.SPLUNK_DEB
+                    echo "${splunkDebPath}"
                                   
                     sh "scp ${SPLUNK_DEB} ${TARGET_INSTANCE}:/home/jenkins"
                    
