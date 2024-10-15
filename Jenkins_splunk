@@ -17,7 +17,7 @@ pipeline {
                     def splunkDebPath = params.SPLUNK_DEB
                     echo "${splunkDebPath}"
                                   
-                    sh "scp ${SPLUNK_DEB} ${TARGET_INSTANCE}:/home/jenkins"
+                    sh "scp ${splunkDebPath} ${TARGET_INSTANCE}:/home/jenkins"
                    
                     
                 }
