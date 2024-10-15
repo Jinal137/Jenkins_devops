@@ -73,6 +73,7 @@ pipeline {
                         ssh ${REMOTE_HOST} '
                         tar -xzf ${REMOTE_PATH}/${TAR_FILE} &&
                         nohup python3 ${REMOTE_PATH}/${PYTHON_FILE} > ${REMOTE_PATH}/api.log 2>&1 &'
+                        echo "API Started"
                     """
                     }
                 }
