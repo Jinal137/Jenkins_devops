@@ -73,7 +73,7 @@ pipeline {
                         ssh ${REMOTE_HOST} '
                         tar -xzf ${REMOTE_PATH}/${TAR_FILE} &&
                         
-                        def started_running = sh(script: "nohup python3 ${REMOTE_PATH}/${PYTHON_FILE} > ${REMOTE_PATH}/api.log 2>&1 &'",returnStatus: true) == 0
+                        def started_running = sh(script: "python3 ${REMOTE_PATH}/${PYTHON_FILE}",returnStatus: true) == 0
             
 		    if (started_running) {
 		        echo "API started"
