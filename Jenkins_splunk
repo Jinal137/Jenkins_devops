@@ -1,29 +1,43 @@
 pipeline {
     agent { label 'node1' }
+    
     parameters {
         file(name: 'SPLUNK_DEB', description: 'Upload the Splunk .deb installer')
     }
 
-   
     environment {
         TARGET_INSTANCE = 'jenkins@192.168.29.92'
+        STORAGE_DIR = '/home/jenkin'
     }
+
     stages {   
-     
+        stage('Store File') {
+            steps {
+                script {
+
+                    def splunkDebPath = params.SPLUNK_DEB
+
+                    sh "mkdir -p ${STORAGE_DIR}"
+
+                    sh "mv ${splunkDebPath} ${STORAGE_DIR}/"
+
+                    echo "Stored Splunk installer at: ${STORAGE_DIR}/${splunkDebPath}"
+                }
+            }
+        }
+
         stage('Transfer Splunk') {
             steps {
                 script {
-                    echo "${SPLUNK_DEB}"
-                    def splunkDebPath = ${SPLUNK_DEB}
-                    echo "${splunkDebPath}"
-                                  
-                    sh "scp ${SPLUNK_DEB} ${TARGET_INSTANCE}:/home/jenkins"
-                   
-                    
+
+                    def storedSplunkDebPath = "${STORAGE_DIR}/${params.SPLUNK_DEB}"
+
+                    echo "Transferring Splunk installer from: ${storedSplunkDebPath}"
+
+                    sh "scp ${storedSplunkDebPath} ${TARGET_INSTANCE}:/home/jenkins"
                 }
             }
         }
     }
-
 }
 

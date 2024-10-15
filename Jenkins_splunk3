@@ -1,0 +1,29 @@
+pipeline {
+    agent { label 'node1' }
+    parameters {
+        file(name: 'SPLUNK_DEB', description: 'Upload the Splunk .deb installer')
+    }
+
+   
+    environment {
+        TARGET_INSTANCE = 'jenkins@192.168.29.92'
+    }
+    stages {   
+     
+        stage('Transfer Splunk') {
+            steps {
+                script {
+                    echo "${SPLUNK_DEB}"
+                    def splunkDebPath = params.SPLUNK_DEB
+                    echo "${splunkDebPath}"
+                                  
+                    sh "scp ${SPLUNK_DEB} ${TARGET_INSTANCE}:/home/jenkins"
+                   
+                    
+                }
+            }
+        }
+    }
+
+}
+
