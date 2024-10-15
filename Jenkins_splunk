@@ -13,6 +13,7 @@ pipeline {
         stage('Transfer Splunk') {
             steps {
                 script {
+                    echo "${SPLUNK_DEB}"
                                   
                     sh "sudo scp ${SPLUNK_DEB} ${TARGET_INSTANCE}:/home/jenkins"
                    
