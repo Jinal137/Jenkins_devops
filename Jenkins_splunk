@@ -1,29 +1,58 @@
 pipeline {
     agent { label 'node1' }
-    parameters {
-        file(name: 'SPLUNK_DEB', description: 'Upload the Splunk .deb installer')
-    }
 
-   
-    environment {
-        TARGET_INSTANCE = 'jenkins@192.168.29.92'
-    }
-    stages {   
-     
+    stages {
+        stage('Prepare') {
+            steps {
+                script {
+
+                    def splunkTgz = 'splunk.tgz'
+                    def targetInstance = 'jenkins@192.168.29.92'
+
+                    if (!fileExists(splunkTgz)) {
+                        error "Splunk tgz file not found in workspace."
+                    }
+                }
+            }
+        }
+
         stage('Transfer Splunk') {
             steps {
                 script {
-                    echo "${SPLUNK_DEB}"
-                    def splunkDebPath = params.SPLUNK_DEB
-                    echo "${splunkDebPath}"
-                                  
-                    sh "scp ${splunkDebPath} ${TARGET_INSTANCE}:/home/jenkins"
-                   
+                    def splunkTgz = 'splunk.tgz'
+                    def targetInstance = 'jenkins@192.168.29.92'
+
+                    sh "scp ${splunkTgz} ${targetInstance}:/tmp/"
+                }
+            }
+        }
+
+        stage('Install Splunk') {
+            steps {
+                script {
+                    def targetInstance = 'jenkins@192.168.29.92'
                     
+
+                    sh """
+                        ssh ${targetInstance} << 'EOF'
+                        cd /tmp
+                        tar -xzvf splunk.tgz
+                        ./splunk/bin/splunk start
+                        rm -f splunk.tgz
+                        EOF
+                    """
                 }
             }
         }
     }
 
+    post {
+        success {
+            echo 'Splunk installation completed successfully.'
+        }
+        failure {
+            echo 'There was an error during the Splunk installation.'
+        }
+    }
 }
 
