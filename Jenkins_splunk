@@ -7,7 +7,7 @@ pipeline {
                 script {
 
                     def splunkTgz = 'splunk.tgz'
-                    def targetInstance = 'jenkins@192.168.29.92'
+                    def targetInstance = 'jenkins@192.168.29.172'
 
                     if (!fileExists(splunkTgz)) {
                         error "Splunk tgz file not found in workspace."
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     def splunkTgz = 'splunk.tgz'
-                    def targetInstance = 'jenkins@192.168.29.92'
+                    def targetInstance = 'jenkins@192.168.29.172'
 
                     sh "scp ${splunkTgz} ${targetInstance}:/tmp/"
                 }
@@ -30,7 +30,7 @@ pipeline {
         stage('Install Splunk') {
             steps {
                 script {
-                    def targetInstance = 'jenkins@192.168.29.92'
+                    def targetInstance = 'jenkins@192.168.29.172'
                     
 
                     sh """
