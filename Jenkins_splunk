@@ -26,6 +26,8 @@ pipeline {
                         ssh ${REMOTE_HOST}
                         cd /tmp
                         echo '${REMOTE_HOST}'
+                        echo '${TAR_FILE}'
+                        ls -lrth
                         tar -xzvf ${TAR_FILE}
                         ./splunk/bin/splunk start
                      
