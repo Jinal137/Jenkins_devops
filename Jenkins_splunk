@@ -8,18 +8,8 @@ pipeline {
 
 
     stages {
-        stage('Check File Exist') {
-            steps {
-                script {
-
-                    if (!fileExists(${splunkTgz})) {
-                        error "Splunk tgz file not found in workspace."
-                    }
-                }
-            }
-        }
-
-        stage('Transfer Splunk') {
+       
+	stage('Transfer Splunk') {
             steps {
                 script {
                     def splunkTgz = ${splunkTgz}
