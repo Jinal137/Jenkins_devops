@@ -1,15 +1,18 @@
 pipeline {
     agent { label 'node1' }
+    environment {
+
+        splunkTgz = 'splunk.tgz'
+        REMOTE_HOST = 'jenkins@192.168.52.39'
+    }
+
 
     stages {
-        stage('Prepare') {
+        stage('Check File Exist') {
             steps {
                 script {
 
-                    def splunkTgz = 'splunk.tgz'
-                    def targetInstance = 'jenkins@192.168.29.172'
-
-                    if (!fileExists(splunkTgz)) {
+                    if (!fileExists(${env.splunkTgz})) {
                         error "Splunk tgz file not found in workspace."
                     }
                 }
@@ -19,10 +22,10 @@ pipeline {
         stage('Transfer Splunk') {
             steps {
                 script {
-                    def splunkTgz = 'splunk.tgz'
-                    def targetInstance = 'jenkins@192.168.29.172'
+                    def splunkTgz = ${env.splunkTgz}
+                    def targetInstance = ${env.REMOTE_HOST}
 
-                    sh "scp ${splunkTgz} ${targetInstance}:/tmp/"
+                    sh "scp ${env.splunkTgz} ${env.REMOTE_HOST}:/tmp/"
                 }
             }
         }
@@ -30,16 +33,13 @@ pipeline {
         stage('Install Splunk') {
             steps {
                 script {
-                    def targetInstance = 'jenkins@192.168.29.172'
-                    
-
+                   
                     sh """
-                        ssh ${targetInstance} << 'EOF'
+                        ssh ${env.REMOTE_HOST}
                         cd /tmp
                         tar -xzvf splunk.tgz
                         ./splunk/bin/splunk start
-                        rm -f splunk.tgz
-                        EOF
+                     
                     """
                 }
             }
@@ -51,7 +51,7 @@ pipeline {
             echo 'Splunk installation completed successfully.'
         }
         failure {
-            echo 'There was an error during the Splunk installation.'
+            echo 'Error during the Splunk installation.'
         }
     }
 }
