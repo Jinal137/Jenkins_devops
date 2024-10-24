@@ -25,7 +25,8 @@ pipeline {
                     sh """
                         ssh ${REMOTE_HOST}
                         cd /tmp
-                        tar -xzvf ${TAR_FILE}
+                        tar -xzvf ${TAR_FILE} -c /home/jenkins
+                        ./splunk/bin/splunk start
                      
                     """
                 }
