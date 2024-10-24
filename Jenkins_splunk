@@ -28,7 +28,7 @@ pipeline {
                         echo '${REMOTE_HOST}'
                         echo '${TAR_FILE}'
                         ls -lrth
-                        tar -xzvf ${TAR_FILE}
+                        /usr/bin/tar -xzvf ${TAR_FILE}
                         ./splunk/bin/splunk start
                      
                     """
