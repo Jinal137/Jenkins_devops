@@ -46,11 +46,10 @@ pipeline {
                 script {
 
                     sh '''
-                        ssh ${REMOTE_HOST} '''
+                            ssh ${REMOTE_HOST}
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${REMOTE_PATH}/${JAVA_FILE}
                             mkdir -p ${REMOTE_PATH}/webapp/WEB-INF/classes
                             cp ${REMOTE_PATH}/Helloworld.class ${REMOTE_PATH}/webapp/WEB-INF/classes
-                        '''
                     '''
                 }
             }
