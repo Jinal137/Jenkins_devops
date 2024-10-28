@@ -1,0 +1,73 @@
+pipeline {
+    agent {label 'node1' }
+
+    environment {
+        REMOTE_HOST = 'jenkins@192.168.29.92'
+        JAVA_FILE = 'Helloworld.java'
+        REMOTE_PATH = '/home/jenkins'
+    }
+
+    stages {
+    
+    	stage('Clone') {
+            steps {
+            	git url: 'https://github.com/Jinal137/Java.git', branch: 'master'
+            }
+        }
+        stage('Apache Tomcat Installation') {
+            steps {
+                script {
+                    def tomcatDir = "/opt/tomcat"
+                    def checkTomcatCmd = "if [ ! -d ${tomcatDir} ]; then echo 'not_installed'; else echo 'installed'; fi"
+
+                    def result = sh(script: "ssh ${REMOTE_HOST} '${checkTomcatCmd}'", returnStdout: true).trim()
+
+                    if (result == 'not_installed') {
+                        
+                        sh '''
+                            ssh ${REMOTE_HOST} '''
+                                wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.76/bin/apache-tomcat-9.0.96.tar.gz
+                                tar -xvzf apache-tomcat-9.0.96.tar.gz
+                                sudo mv apache-tomcat-9.0.96 /opt/tomcat
+                                sudo chown -R jenkins:jenkins /opt/tomcat
+                                /opt/tomcat/bin/startup.sh
+                            '''
+                        '''
+                        echo 'Apache Tomcat is now installed.'
+                    } else {
+                        echo 'Apache Tomcat is already installed.'
+                    }
+                }
+            }
+        }
+
+        stage('Compile Java File') {
+            steps {
+                script {
+
+                    sh '''
+                        ssh ${REMOTE_HOST} '''
+                            javac -cp "/opt/tomcat/lib/servlet-api.jar" ${REMOTE_PATH}/${JAVA_FILE}
+                            mkdir -p ${REMOTE_PATH}/webapp/WEB-INF/classes
+                            cp ${REMOTE_PATH}/Helloworld.class ${REMOTE_PATH}/webapp/WEB-INF/classes
+                        '''
+                    '''
+                }
+            }
+        }
+
+        stage('WAR File') {
+            steps {
+                script {
+                    sh '''
+                        ssh ${REMOTE_HOST} '''
+                            cd ${REMOTE_PATH}/webapp
+                            jar -cvf ../helloworld.war *
+                        '''
+                    '''
+                }
+            }
+        }
+    }
+}
+

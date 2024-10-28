@@ -27,8 +27,8 @@ pipeline {
                         cd /tmp
                         echo '${REMOTE_HOST}'
                         echo '${TAR_FILE}'
-                        ls -lrth
-                        /usr/bin/tar -xzvf ${TAR_FILE}
+                        ls -lrth /tmp
+                        /usr/bin/tar -xzvf /tmp/${TAR_FILE}
                         ./splunk/bin/splunk start
                      
                     """
