@@ -48,14 +48,14 @@ pipeline {
                     sh '''
                           
                             scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}
-                            ssh ${REMOTE_HOST} 
+                            ssh ${REMOTE_HOST} '
                             pwd
                             sudo mkdir -p Jenkins_Java/webapp/WEB-INF/classes
                             sudo cp ${JAVA_FILE} ${REMOTE_PATH}/Jenkins_Java
                             cd Jenkins_Java
                             pwd
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
-                            cp ${REMOTE_PATH}/Hello.class ${REMOTE_PATH}/Jenkins_Java/webapp/WEB-INF/classes
+                            cp ${REMOTE_PATH}/Hello.class ${REMOTE_PATH}/Jenkins_Java/webapp/WEB-INF/classes '
                     '''
                 }
             }
@@ -65,9 +65,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                            ssh ${REMOTE_HOST}
+                            ssh ${REMOTE_HOST} '
                             cd ${REMOTE_PATH}/Jenkins_Java/webapp
-                            jar -cvf ../helloworld.war *
+                            jar -cvf ../helloworld.war * '
                     '''
                 }
             }
