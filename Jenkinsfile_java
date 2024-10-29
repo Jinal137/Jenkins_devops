@@ -66,6 +66,7 @@ pipeline {
                             ssh ${REMOTE_HOST} '
                             cd ${REMOTE_PATH}/J_Java
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
+                            echo "cp ${REMOTE_PATH}/J_Java/Hello.class webapp/WEB-INF/classes/"
                             cp ${REMOTE_PATH}/J_Java/Hello.class webapp/WEB-INF/classes/
                             cd ${REMOTE_PATH}/J_Java/webapp
                             jar -cvf ../helloworld.war * '
