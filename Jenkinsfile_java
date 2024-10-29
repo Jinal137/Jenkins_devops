@@ -2,7 +2,7 @@ pipeline {
     agent {label 'node1' }
 
     environment {
-        REMOTE_HOST = 'jenkins@172.20.10.9'
+        REMOTE_HOST = 'jenkins@192.168.29.92'
         JAVA_FILE = 'Hello.java'
         REMOTE_PATH = '/home/jenkins'
     }
