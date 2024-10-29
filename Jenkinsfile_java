@@ -71,7 +71,8 @@ pipeline {
                             echo "cp Hello.class webapp/WEB-INF/classes/"
                             cp Hello.class webapp/WEB-INF/classes/
                             jar -cvf hellojinal.war * '''
-                            cp hellojinal.war /opt/tomcat/webapps/
+                            pwd
+                            cp ${REMOTE_PATH}/J_Java/hellojinal.war /opt/tomcat/webapps/
 
                     """
                 }
