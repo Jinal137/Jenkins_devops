@@ -72,7 +72,7 @@ pipeline {
                             cp Hello.class webapp/WEB-INF/classes/
                             cd webapp
                             jar -cvf ../hellojinal.war * '''
-                            sudo hellojinal.war /opt/tomcat/webapps/
+                            cp hellojinal.war /opt/tomcat/webapps/
 
                     """
                 }
