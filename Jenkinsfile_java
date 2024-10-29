@@ -33,12 +33,53 @@ pipeline {
                                 tar -xvzf apache-tomcat-9.0.96.tar.gz
                                 sudo mv apache-tomcat-9.0.96 /opt/tomcat
                                 sudo chown -R jenkins:jenkins /opt/tomcat
-                                /opt/tomcat/bin/startup.sh
                            
                         '''
                         echo 'Apache Tomcat is now installed.'
                     } else {
                         echo 'Apache Tomcat is already installed.'
+                    }
+                }
+            }
+        }
+        stage('Create Tomcat Service') {
+            steps {
+                script {
+                    def serviceCheckCmd = "systemctl is-active tomcat"
+                    def serviceExists = sh(script: "ssh ${REMOTE_HOST} '${serviceCheckCmd}'", returnStatus: true)
+
+                    if (serviceExists != 0) { // Service does not exist
+                        sh """
+                            ssh ${REMOTE_HOST} '
+                            # Create the systemd service file
+                            echo "[Unit]
+                            Description=Apache Tomcat Web Application Container
+                            After=network.target
+
+                            [Service]
+                            Type=simple
+                            User=jenkins  # Change to the user that runs Tomcat
+                            Group=jenkins  # Change to the appropriate group
+                            Environment=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64  # Update as necessary
+                            Environment=CATALINA_HOME=/opt/tomcat
+                            Environment=CATALINA_BASE=/opt/tomcat
+                            ExecStart=/opt/tomcat/bin/startup.sh
+                            ExecStop=/opt/tomcat/bin/shutdown.sh
+                            RestartSec=10
+                            Restart=always
+
+                            [Install]
+                            WantedBy=multi-user.target" | sudo tee /etc/systemd/system/tomcat.service
+
+                            # Reload systemd daemon and enable the Tomcat service
+                            sudo systemctl daemon-reload
+                            sudo systemctl enable tomcat
+                            sudo systemctl start tomcat
+                            '
+                        """
+                        echo 'Tomcat service created and started.'
+                    } else {
+                        echo 'Tomcat service already exists.'
                     }
                 }
             }
