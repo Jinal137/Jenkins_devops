@@ -59,10 +59,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        ssh ${REMOTE_HOST} '''
+                            ssh ${REMOTE_HOST}
                             cd ${REMOTE_PATH}/webapp
                             jar -cvf ../helloworld.war *
-                        '''
                     '''
                 }
             }
