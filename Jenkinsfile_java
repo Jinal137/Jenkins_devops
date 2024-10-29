@@ -62,10 +62,10 @@ pipeline {
                 script {
                     sh '''
                             ssh ${REMOTE_HOST} '
-                            cp ${JAVA_FILE} ${REMOTE_PATH}/J_Java
+                            cp ${JAVA_FILE} ${REMOTE_PATH}/J_Java/
                             cd ${REMOTE_PATH}/J_Java
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
-                            cp Hello.class webapp/WEB-INF/classes
+                            cp Hello.class webapp/WEB-INF/classes/
                             cd ${REMOTE_PATH}/J_Java/webapp
                             jar -cvf ../helloworld.war * '
                     '''
