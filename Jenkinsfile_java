@@ -53,7 +53,7 @@ pipeline {
                             mkdir -p J_Java/webapp/WEB-INF/classes
                             
                             '
-                           scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/
+                           sudo scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/
                     '''
                 }
             }
