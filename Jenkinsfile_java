@@ -48,7 +48,7 @@ pipeline {
                     sh '''
                             scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/
                             ssh ${REMOTE_HOST}
-                            cd /${REMOTE_PATH}
+                            cd ${REMOTE_PATH}
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
                             mkdir -p ${REMOTE_PATH}/webapp/WEB-INF/classes
                             cp ${REMOTE_PATH}/Helloworld.class ${REMOTE_PATH}/webapp/WEB-INF/classes
