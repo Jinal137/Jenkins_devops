@@ -70,8 +70,7 @@ pipeline {
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
                             echo "cp Hello.class webapp/WEB-INF/classes/"
                             cp Hello.class webapp/WEB-INF/classes/
-                            cd webapp
-                            jar -cvf ../hellojinal.war * '''
+                            jar -cvf hellojinal.war * '''
                             cp hellojinal.war /opt/tomcat/webapps/
 
                     """
