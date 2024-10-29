@@ -49,11 +49,9 @@ pipeline {
                           
                             scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}
                             ssh ${REMOTE_HOST} '
-                            pwd
-                            mkdir -p ${REMOTE_PATH}/Jenkins_Java/webapp/WEB-INF/classes
+                            sudo mkdir -p ${REMOTE_PATH}/Jenkins_Java/webapp/WEB-INF/classes
                             cp ${REMOTE_PATH}/${JAVA_FILE} ${REMOTE_PATH}/Jenkins_Java
                             cd ${REMOTE_PATH}/Jenkins_Java
-                            pwd
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
                             cp ${REMOTE_PATH}/Hello.class ${REMOTE_PATH}/Jenkins_Java/webapp/WEB-INF/classes '
                     '''
