@@ -53,7 +53,7 @@ pipeline {
                             mkdir -p ${REMOTE_PATH}/J_Java/webapp/WEB-INF/classes
                             sudo chown -R jenkins:jenkins ${REMOTE_PATH}/J_Java
                             '
-                           scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/
+                           scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/${JAVA_FILE}
                     '''
                 }
             }
