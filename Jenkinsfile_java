@@ -27,6 +27,9 @@ pipeline {
                         sh '''
                             	 ssh ${REMOTE_HOST}
                                 wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.76/bin/apache-tomcat-9.0.96.tar.gz
+// Make it Env variables
+// Add echo if not installed
+// Create Service to start tomcat
                                 tar -xvzf apache-tomcat-9.0.96.tar.gz
                                 sudo mv apache-tomcat-9.0.96 /opt/tomcat
                                 sudo chown -R jenkins:jenkins /opt/tomcat
@@ -50,6 +53,8 @@ pipeline {
                             scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}
                             ssh ${REMOTE_HOST} '
                             mkdir -p J_Java/webapp/WEB-INF/classes
+                            echo "${REMOTE_PATH}/${JAVA_FILE} ${REMOTE_PATH}/J_Java/"
+                            exit 1
                             cp ${REMOTE_PATH}/${JAVA_FILE} ${REMOTE_PATH}/J_Java/
                             
                             '
