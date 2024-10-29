@@ -50,7 +50,7 @@ pipeline {
 
                     sh '''
                             ssh ${REMOTE_HOST} '
-                            [ ! -d J_Java ] && mkdir -p ${REMOTE_PATH}/J_Java/webapp/WEB-INF/classes
+                            [ ! -d ${REMOTE_PATH}/J_Java ] && mkdir -p ${REMOTE_PATH}/J_Java/webapp/WEB-INF/classes
                             sudo chown -R jenkins:jenkins J_Java
                             '
                            scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/
