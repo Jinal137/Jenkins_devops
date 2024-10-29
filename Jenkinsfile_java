@@ -72,7 +72,7 @@ pipeline {
                             cp Hello.class webapp/WEB-INF/classes/
                             jar -cvf hellojinal.war * 
                             pwd
-                            cp ${REMOTE_PATH}/J_Java/hellojinal.war /opt/tomcat/webapps/
+                            cp ${REMOTE_PATH}/J_Java/hellojinal.war /opt/tomcat/
                             '''
 
                     """
