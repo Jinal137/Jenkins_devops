@@ -53,7 +53,7 @@ pipeline {
                             cp ${REMOTE_PATH}/${JAVA_FILE} ${REMOTE_PATH}/Jenkins_Java/
                             cd ${REMOTE_PATH}/Jenkins_Java
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
-                            cp ${REMOTE_PATH}/Hello.class ${REMOTE_PATH}/Jenkins_Java/webapp/WEB-INF/classes/ '
+                            cp Hello.class ${REMOTE_PATH}/Jenkins_Java/webapp/WEB-INF/classes/ '
                     '''
                 }
             }
