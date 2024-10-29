@@ -71,7 +71,7 @@ pipeline {
                             echo "cp Hello.class webapp/WEB-INF/classes/"
                             cp Hello.class webapp/WEB-INF/classes/
                             cd webapp
-                            jar -cvf ../helloworld.war * '''
+                            jar -cvf ../hellojinal.war * '''
                     """
                 }
             }
