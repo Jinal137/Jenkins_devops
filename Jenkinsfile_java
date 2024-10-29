@@ -62,16 +62,17 @@ pipeline {
         stage('WAR File') {
             steps {
                 script {
-                    sh '''
+                    sh """
                     	     scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/
-                            ssh ${REMOTE_HOST} '
+                            ssh ${REMOTE_HOST} '''
                             cd ${REMOTE_PATH}/J_Java
-                            javac -cp "/opt/tomcat/lib/servlet-api.jar" ${REMOTE_PATH}/J_Java/${JAVA_FILE}
-                            echo "cp ${REMOTE_PATH}/J_Java/Hello.class webapp/WEB-INF/classes/"
-                            cp ${REMOTE_PATH}/J_Java/Hello.class webapp/WEB-INF/classes/
-                            cd ${REMOTE_PATH}/J_Java/webapp
-                            jar -cvf ../helloworld.war * '
-                    '''
+                            pwd
+                            javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
+                            echo "cp Hello.class webapp/WEB-INF/classes/"
+                            cp Hello.class webapp/WEB-INF/classes/
+                            cd webapp
+                            jar -cvf ../helloworld.war * '''
+                    """
                 }
             }
         }
