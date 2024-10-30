@@ -51,7 +51,7 @@ pipeline {
                     if (serviceExists != 0) { // Service does not exist
                         sh """
                             ssh ${REMOTE_HOST} '
-                            # Create the systemd service file
+                            sudo nano /etc/systemd/system/tomcat.service
                             echo "[Unit]
                             Description=Apache Tomcat Web Application Container
                             After=network.target
