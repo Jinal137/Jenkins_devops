@@ -2,6 +2,7 @@ pipeline {
     agent {label 'node1' }
 
     environment {
+        CHECKSUM_FILE = 'checksum.md5'
         REMOTE_HOST = 'jenkins@192.168.29.92'
         JAVA_FILE = 'Hello.java'
         REMOTE_PATH = '/home/jenkins'
@@ -99,6 +100,52 @@ pipeline {
                 }
             }
         }
+        
+        stage('Checksum') {
+            steps {
+            	script{
+
+		        env.CHECKSUM = sh(script: "md5sum ${JAVA_FILE} | awk '{ print \$1 }'",returnStdout: true).trim()
+                }
+            }
+        }
+        
+        stage('Copy File') {
+            steps {
+                script {
+                    sh """
+                    	     scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/
+                            
+                    """
+                }
+            }
+        }
+        
+        stage('Check Checksum') {
+            steps {
+                script {
+                
+                    def remoteChecksum = sh(
+    script: "ssh ${REMOTE_HOST} 'md5sum ${REMOTE_PATH}/J_Java/${JAVA_FILE}'",returnStdout: true).tokenize()[0]
+    
+    		     def storedChecksum = sh(script: "ssh ${REMOTE_HOST} 'echo ${env.CHECKSUM}'", returnStdout: true).trim()
+    		     
+    		     echo "Local checksum: ${env.CHECKSUM}"
+                    echo "Remote checksum: ${remoteChecksum}"
+                    echo "Stored checksum: ${storedChecksum}"
+    		     
+    		     if (remoteChecksum != storedChecksum) {
+                        error "Checksum verification failed: ${remoteChecksum} != ${storedChecksum}"
+                    } else {
+                        echo "Checksum verified successfully: ${remoteChecksum}"
+                    }
+                    
+                    
+                }
+            }
+        }
+
+
 
         stage('WAR File') {
             steps {
