@@ -23,23 +23,25 @@ pipeline {
 
                     def result = sh(script: "ssh ${REMOTE_HOST} '${checkTomcatCmd}'", returnStdout: true).trim()
 
-                    if (result == 'not_installed') {
+                    if (result != 'not_installed') {
+                    
+                    	echo 'Apache Tomcat is already installed.'
+                    	return
                         
-                        sh '''
-                            	ssh ${REMOTE_HOST} """
-                                wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
+                        
+                    }
+                    sh '''
+                    	ssh ${REMOTE_HOST} """
+                        wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
 // Make it Env variables
 // Add echo if not installed
 // Create Service to start tomcat
-                                tar -xvzf apache-tomcat-9.0.96.tar.gz
-                                sudo mv apache-tomcat-9.0.96 /opt/tomcat
-                                sudo chown -R jenkins:jenkins /opt/tomcat """
-                           
+                        tar -xvzf apache-tomcat-9.0.96.tar.gz
+                        sudo mv apache-tomcat-9.0.96 /opt/tomcat
+                        sudo chown -R jenkins:jenkins /opt/tomcat """
+                   
                         '''
                         echo 'Apache Tomcat is now installed.'
-                    } else {
-                        echo 'Apache Tomcat is already installed.'
-                    }
                 }
             }
         }
