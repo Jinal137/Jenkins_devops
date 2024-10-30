@@ -30,9 +30,20 @@ pipeline {
                         
                         
                     }
-                    sh '''
+                     def install_tomcat = sh(script: ''' ssh ${REMOTE_HOST} """
+                        wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz""" ''', returnStdout: true).trim()
+
+                    if (install_tomcat == 'not_installed') {
+                    
+                    	echo 'Apache Tomcat was not Installed.'
+                    	exit 1
+                        
+                        
+                    }
+
+                  sh '''
                     	ssh ${REMOTE_HOST} """
-                        wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
+                        
                         tar -xvzf apache-tomcat-9.0.96.tar.gz
                         sudo mv apache-tomcat-9.0.96 /opt/tomcat
                         sudo chown -R jenkins:jenkins /opt/tomcat """
