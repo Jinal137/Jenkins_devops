@@ -92,7 +92,7 @@ pipeline {
                         echo 'Tomcat service created and started.'
                 }
             }
-        }
+        
 
         stage('Compile Java File') {
             steps {
@@ -177,3 +177,4 @@ pipeline {
         }
     }
 }
+
