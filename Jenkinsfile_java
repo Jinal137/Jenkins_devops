@@ -57,23 +57,23 @@ pipeline {
                 script {
                     def serviceCheckCmd = "systemctl is-active tomcat"
                     def serviceExists = sh(script: "ssh ${REMOTE_HOST} '${serviceCheckCmd}'", returnStatus: true)
-
-                    if (serviceExists == 0) {
+                    if (serviceExists == 0)
                     	  echo 'Tomcat service already exists.'
                         
                          return
                     } 
                     sh """
-                            ssh ${REMOTE_HOST} '
+                            ssh ${REMOTE_HOST} '''
                             sudo nano /etc/systemd/system/tomcat.service
-                            echo "[Unit]
+                            echo "
+                            [Unit]
                             Description=Apache Tomcat Web Application Container
                             After=network.target
 
                             [Service]
                             Type=simple
-                            User=jenkins  # Change to the user that runs Tomcat
-                            Group=jenkins  # Change to the appropriate group
+                            User=jenkins
+                            Group=jenkins
                             Environment=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64  # Update as necessary
                             Environment=CATALINA_HOME=/opt/tomcat
                             Environment=CATALINA_BASE=/opt/tomcat
@@ -84,12 +84,10 @@ pipeline {
 
                             [Install]
                             WantedBy=multi-user.target" | sudo tee /etc/systemd/system/tomcat.service
-
-                            # Reload systemd daemon and enable the Tomcat service
                             sudo systemctl daemon-reload
                             sudo systemctl enable tomcat
                             sudo systemctl start tomcat
-                            '
+                            '''
                         """
                         echo 'Tomcat service created and started.'
                 }
