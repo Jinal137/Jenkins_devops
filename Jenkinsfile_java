@@ -33,13 +33,9 @@ pipeline {
                     sh '''
                     	ssh ${REMOTE_HOST} """
                         wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
-// Make it Env variables
-// Add echo if not installed
-// Create Service to start tomcat
                         tar -xvzf apache-tomcat-9.0.96.tar.gz
                         sudo mv apache-tomcat-9.0.96 /opt/tomcat
                         sudo chown -R jenkins:jenkins /opt/tomcat """
-                   
                         '''
                         echo 'Apache Tomcat is now installed.'
                 }
@@ -51,8 +47,12 @@ pipeline {
                     def serviceCheckCmd = "systemctl is-active tomcat"
                     def serviceExists = sh(script: "ssh ${REMOTE_HOST} '${serviceCheckCmd}'", returnStatus: true)
 
-                    if (serviceExists != 0) { // Service does not exist
-                        sh """
+                    if (serviceExists == 0) {
+                    	  echo 'Tomcat service already exists.'
+                        
+                         return
+                    } 
+                    sh """
                             ssh ${REMOTE_HOST} '
                             sudo nano /etc/systemd/system/tomcat.service
                             echo "[Unit]
@@ -81,9 +81,6 @@ pipeline {
                             '
                         """
                         echo 'Tomcat service created and started.'
-                    } else {
-                        echo 'Tomcat service already exists.'
-                    }
                 }
             }
         }
@@ -94,7 +91,7 @@ pipeline {
 
                     sh '''
                             ssh ${REMOTE_HOST} '
-                            mkdir -p J_Java/webapp/WEB-INF/classes
+                            [ ! -d "J_Java/webapp/WEB-INF/classes" ] && mkdir -p "J_Java/webapp/WEB-INF/classes" || echo "already exists"
                             sudo chown -R jenkins:jenkins J_Java
                             '
                           
@@ -136,11 +133,12 @@ pipeline {
                     echo "Remote checksum: ${remoteChecksum}"
                     echo "Stored checksum: ${storedChecksum}"
     		     
-    		     if (remoteChecksum != storedChecksum) {
-                        error "Checksum verification failed: ${remoteChecksum} != ${storedChecksum}"
-                    } else {
-                        echo "Checksum verified successfully: ${remoteChecksum}"
-                    }
+    		     if (remoteChecksum == storedChecksum) {
+    		         echo "Checksum verified successfully: ${remoteChecksum}"
+    		         return
+                       
+                    } 
+                     error "Checksum verification failed: ${remoteChecksum} != ${storedChecksum}"
                     
                     
                 }
@@ -156,13 +154,11 @@ pipeline {
                     	     scp ${JAVA_FILE} ${REMOTE_HOST}:${REMOTE_PATH}/J_Java/
                             ssh ${REMOTE_HOST} '''
                             cd ${REMOTE_PATH}/J_Java
-                            pwd
                             javac -cp "/opt/tomcat/lib/servlet-api.jar" ${JAVA_FILE}
                             echo "cp Hello.class webapp/WEB-INF/classes/"
                             cp Hello.class webapp/WEB-INF/classes/
                             cd webapp
                             jar -cvf ../hellojinal.war * 
-                            pwd
                             cp ${REMOTE_PATH}/J_Java/hellojinal.war /opt/tomcat/webapps/
                             '''
 
