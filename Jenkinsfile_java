@@ -33,7 +33,7 @@ pipeline {
                      def install_tomcat = sh(script: ''' ssh ${REMOTE_HOST} """
                         wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz""" ''', returnStdout: true).trim()
 
-                    if (install_tomcat == 'not_installed') {
+                    if (install_tomcat 0) {
                     
                     	echo 'Apache Tomcat was not Installed.'
                     	exit 1
