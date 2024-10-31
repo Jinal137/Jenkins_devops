@@ -18,6 +18,7 @@ pipeline {
         stage('Apache Tomcat Installation') {
             steps {
                 script {
+                    echo "${env.Target_Instance}"
                     def tomcatDir = "/opt/tomcat"
                     def checkTomcatCmd = "if [ ! -d ${tomcatDir} ]; then echo 'not_installed'; else echo 'installed'; fi"
 
